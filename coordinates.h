@@ -1,10 +1,9 @@
 #include <vector>
-
+#include <string>
 
 struct Point {
-    float x;
-    float y;
-    string description;
+        float x, y;
+        std::string description;
 };
 
 std::vector<Point> camera_position = {
@@ -16,4 +15,4 @@ std::vector<Point> camera_position = {
         {-7.463, 13.857, "End of Hallway"},
         {4.998, 13.649, "Kitchen-EE Lab Hallway"},
         {5.394, 6.621, "B. Tracey Hallway"}
-    };
+};

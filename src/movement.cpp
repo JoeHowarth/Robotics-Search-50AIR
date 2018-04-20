@@ -1,15 +1,40 @@
+#include "ros/ros.h"
 #include "movement.h"
 
-// searches current point and all angles - false if object is not seen, else true
+// Searches in all 4 directions at current (x,y) position
+// Returns true if object is seen, else returns false
 bool search_point() {
     // needs to publish when need to camera and processing to occur
     // must listen for when camera module responds
     return false;
 }
 
-// goes to next unvisited waypoint- false if finished traversing known path, else true
+// Continues to the next unvisited waypoint
+// Returns true while unvisited points exist, else returns false
 bool go_to_next() {
+    // must make goal in here
     return false;
 }
 
-bool go_to_position(move_base_msgs::MoveBaseGoal goal); // false if goal not reached
+// Robot moves to a given position
+// Returns true if position is reached, else returns false
+bool go_to_position(move_base_msgs::MoveBaseGoal goal) {
+    ros::Rate r(10);
+    Client nav_client("move_base", true);
+    nav_client.waitForServer();
+    while (ros::ok()) {
+        ros::spinOnce();
+        ros::Time begin = ros::Time::now();
+        nav_client.sendGoal(goal);
+
+        // Goal cancels if not reached with 60 seconds
+        if (ros::Time::now().sec - begin.sec > 60) {
+            nav_client.cancelGoal();
+            ROS_INFO("Unable to reach position");
+            return false;
+        }
+
+        if (nav_client.getState() == actionlib::SimpleClientGoalState::SUCCEEDED)
+            return true;
+    }
+}

@@ -5,7 +5,7 @@
 #include <string>
 
 struct Point {
-        float x, y;
+        float x, y;        
         std::string description;
 };
 

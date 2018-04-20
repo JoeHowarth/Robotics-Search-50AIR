@@ -1,21 +1,13 @@
 #include "preprocess.h"
-<<<<<<< HEAD
 
-std::vector<Point> make_order(Point start_pos) {
-    // Temporary just used to test compile   
-    std::vector<Point> temp;
-    Point a = {1, 1, "test"};
-    temp.push_back(a);
-    return temp;
-}
-=======
 #include <algorithm>
 #include <cmath>
 double distance(Point p1, Point p2)
 {
         double dx = p1.x - p2.x;
         double dy = p1.y - p2.y;
-        return std::sqrt(dx*dx + dy*dy);
+        //return std::sqrt(dx*dx + dy*dy);
+        return dx + dy;
 }
 
 double perm_distance(std::vector<Point> &perm)
@@ -53,7 +45,6 @@ std::vector<Point> make_order(Point start_pos)
 /*#include <iostream>
 int main()
 {
-        for (auto i : make_order(camera_position.back()))
+        for (auto &&i : make_order(camera_position.back()))
                 std::cout << i.x << ", " << i.y << i.description << std::endl;
                 }*/
->>>>>>> 46826de725cb2e9cd7d96bba81c2ce4345008746

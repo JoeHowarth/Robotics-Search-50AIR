@@ -7,10 +7,6 @@
 struct Point {
         float x, y;        
         std::string description;
-
-//        bool operator<(Point p) {
-//                return sqrt(x*x+y*y) < sqrt(p.x*p.x+p.y*p.y)
-//        }
 };
 
 

@@ -6,13 +6,13 @@
 #include "movement.h"
 
 
-Point start_position = {0, 0, ""};
+Point curr_position = {0, 0, "current position"};
 
 void positionCallback(const geometry_msgs::PoseWithCovarianceStamped::ConstPtr& msg)
 {
-    start_position.x = msg -> pose.pose.position.x;
-    start_position.y = msg -> pose.pose.position.y;
-    start_position.description = "Starting Position";
+    curr_position.x = msg -> pose.pose.position.x;
+    curr_position.y = msg -> pose.pose.position.y;
+    curr_position.description = "Starting Position";
 }
 
 
@@ -28,7 +28,7 @@ int main(int argc, char *argv[])
     ros::spinOnce();
     
     // Process Optimal Route with Full Coverage
-    std::vector<Point> ordered = make_order(start_position);
+    std::vector<Point> ordered = make_order(curr_position);
 
 
     // Movement

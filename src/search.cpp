@@ -6,7 +6,7 @@
 #include "movement.h"
 
 
-Point start_position = {0, 0, NULL};
+Point start_position = {0, 0, ""};
 
 void positionCallback(const geometry_msgs::PoseWithCovarianceStamped::ConstPtr& msg)
 {

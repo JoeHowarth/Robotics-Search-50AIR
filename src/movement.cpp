@@ -9,11 +9,20 @@ bool search_point() {
     return false;
 }
 
-// Continues to the next unvisited waypoint
+// Continues to the given unvisited waypoint
 // Returns true while unvisited points exist, else returns false
-bool go_to_next() {
-    // must make goal in here
-    return false;
+bool go_to_next(Point next_location) {
+    // Making goal
+    move_base_msgs::MoveBaseGoal goal;
+    goal.target_pose.header.frame_id = "/map";
+
+    goal.target_pose.pose.position.x =  next_location.x;
+    goal.target_pose.pose.position.y =  next_location.y;
+    goal.target_pose.pose.position.z =  0.0;
+    goal.target_pose.pose.orientation = tf::createQuaternionMsgFromYaw(0.0);
+
+    bool success = go_to_position(goal);
+    return success;
 }
 
 // Robot moves to a given position
@@ -22,11 +31,11 @@ bool go_to_position(move_base_msgs::MoveBaseGoal goal) {
     ros::Rate r(10);
     Client nav_client("move_base", true);
     nav_client.waitForServer();
-    while (ros::ok()) {
-        ros::spinOnce();
-        ros::Time begin = ros::Time::now();
-        nav_client.sendGoal(goal);
+    ros::spinOnce();
+    ros::Time begin = ros::Time::now();
+    nav_client.sendGoal(goal);
 
+    while (ros::ok()) {
         // Goal cancels if not reached with 60 seconds
         if (ros::Time::now().sec - begin.sec > 60) {
             nav_client.cancelGoal();

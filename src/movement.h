@@ -13,9 +13,9 @@ typedef actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> Client;
 // Returns true if object is seen, else returns false
 bool search_point();
 
-// Continues to the next unvisited waypoint
-// Returns true while unvisited points exist, else returns false
-bool go_to_next();
+// Goes to the given waypoint
+// Returns true if reaches point, else returns false
+bool go_to_next(Point next_location);
 
 // Robot moves to a given position
 // Returns true if position is reached, else returns false

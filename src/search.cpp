@@ -32,14 +32,27 @@ int main(int argc, char *argv[])
 
 
     // Movement
-    bool isFound = false;
-    while (isFound == false) {
-        isFound = search_point(); // function within that follows if anything of interest is seen
-        if (go_to_next()) { // go_to_next returns false if no more places to go, else returns true
-            ROS_INFO("Finished Searching - Unable to Find Object :(\n");
-            break;
-        };
-    }
+    // bool isFound = false;
+    // while (isFound == false) {
+    //     isFound = search_point(); // function within that follows if anything of interest is seen
+    //     if (go_to_next()) { // go_to_next returns false if no more places to go, else returns true
+    //         ROS_INFO("Finished Searching - Unable to Find Object :(\n");
+    //         break;
+    //     };
+    // }
+
+
+    move_base_msgs::MoveBaseGoal goal;
+    goal.target_pose.header.frame_id = "/map";
+
+    goal.target_pose.pose.position.x =  -4.873;
+    goal.target_pose.pose.position.y =  1.701;
+    goal.target_pose.pose.position.z =  0.0;
+    double yaw = 0.0;
+    goal.target_pose.pose.orientation = tf::createQuaternionMsgFromYaw(yaw);
+
+
+    go_to_position(goal);
     // while true:
         // go on standard path
         // at each point - call vision module at 45 degree increments

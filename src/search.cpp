@@ -30,16 +30,15 @@ int main(int argc, char *argv[])
     // Process Optimal Route with Full Coverage
     std::vector<Point> ordered = make_order(curr_position);
 
-
-    // Movement - TODO: currently written to follow standard path
-    int current_search_index = 0; // index of point to search next
+    // Movement
+    int current_search_index = 0; // index of point to search next; skipping starting location
     bool isFound = false;
     while (isFound == false) {
         // isFound = search_point(); // function within that follows if anything of interest is seen
         if (go_to_next(ordered[current_search_index]) == false) { // false if unable to reach point
             ROS_INFO("Unable to reach point, skipping to next point\n");
         }
-        // TODO - SEARCH CURRENT POINT
+        isFound = search_point();
         if (current_search_index + 1 < ordered.size()) {
             current_search_index ++;
         } else {

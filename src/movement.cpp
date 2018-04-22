@@ -21,6 +21,7 @@ bool go_to_next(Point next_location) {
     goal.target_pose.pose.position.z =  0.0;
     goal.target_pose.pose.orientation = tf::createQuaternionMsgFromYaw(0.0);
 
+    ROS_INFO("Navigating to %s", next_location.description.c_str());
     bool success = go_to_position(goal);
     return success;
 }
@@ -36,10 +37,9 @@ bool go_to_position(move_base_msgs::MoveBaseGoal goal) {
     nav_client.sendGoal(goal);
 
     while (ros::ok()) {
-        // Goal cancels if not reached with 60 seconds
-        if (ros::Time::now().sec - begin.sec > 60) {
+        // Goal cancels if not reached with 30 seconds
+        if (ros::Time::now().sec - begin.sec > 30) {
             nav_client.cancelGoal();
-            ROS_INFO("Unable to reach position");
             return false;
         }
 

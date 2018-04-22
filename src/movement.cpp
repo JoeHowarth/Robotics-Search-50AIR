@@ -5,7 +5,7 @@
 // Returns true if object is seen, else returns false
 bool search_point() {
     for (int i = 0; i < 4; i++) {
-        rotate(90.0 * i);
+        rotate(90.0);
     }
     // needs to publish when need to camera and processing to occur
     // must listen for when camera module responds
@@ -13,13 +13,15 @@ bool search_point() {
 }
 
 void rotate(float degree) {
+    // TODO: have to send twist message?
+    ROS_INFO("Attempting to rotate %f  degrees", degree);
     move_base_msgs::MoveBaseGoal goal;
     goal.target_pose.header.frame_id = "/base_link";
 
     goal.target_pose.pose.position.x =  0.0;
     goal.target_pose.pose.position.y =  0.0;
     goal.target_pose.pose.position.z =  0.0;
-    goal.target_pose.pose.orientation = tf::createQuaternionMsgFromYaw(0.0);
+    goal.target_pose.pose.orientation = tf::createQuaternionMsgFromYaw(PI*degree/180.0);
     if (go_to_position(goal)) {
         ROS_INFO("Succesfully rotated to %f  degrees", degree);
     } else {

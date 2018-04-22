@@ -31,7 +31,8 @@ int main(int argc, char *argv[])
     std::vector<Point> ordered = make_order(curr_position);
 
     // Movement
-    int current_search_index = 0; // index of point to search next; skipping starting location
+    int current_search_index = 1; // index of point to search next; skipping starting location
+    isFound = search_point();
     bool isFound = false;
     while (isFound == false) {
         // isFound = search_point(); // function within that follows if anything of interest is seen

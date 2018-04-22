@@ -21,7 +21,7 @@ double perm_distance(std::vector<Point> &perm)
 //camera_position
 std::vector<Point> make_order(Point start_pos)
 {
-        
+        start_pos.description = "start";
         std::vector<Point> perm = camera_position;
         perm.insert(perm.begin(), start_pos);
 
@@ -42,9 +42,9 @@ std::vector<Point> make_order(Point start_pos)
         return best_perm;
 }
 
-/*#include <iostream>
+#include <iostream>
 int main()
 {
-        for (auto &&i : make_order(camera_position.back()))
-                std::cout << i.x << ", " << i.y << i.description << std::endl;
-                }*/
+        for (auto &&i : make_order(camera_position.front()))
+                std::cout << i.x << ", " << i.y << " " << i.description << std::endl;
+}

@@ -4,8 +4,8 @@
 #include <cmath>
 double distance(Point p1, Point p2)
 {
-        double dx = p1.x - p2.x;
-        double dy = p1.y - p2.y;
+        double dx = std::abs(p1.x - p2.x);
+        double dy = std::abs(p1.y - p2.y);
         //return std::sqrt(dx*dx + dy*dy);
         return dx + dy;
 }

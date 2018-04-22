@@ -4,9 +4,27 @@
 // Searches in all 4 directions at current (x,y) position
 // Returns true if object is seen, else returns false
 bool search_point() {
+    for (int i = 0; i < 4; i++) {
+        rotate(90.0 * i);
+    }
     // needs to publish when need to camera and processing to occur
     // must listen for when camera module responds
     return false;
+}
+
+void rotate(float degree) {
+    move_base_msgs::MoveBaseGoal goal;
+    goal.target_pose.header.frame_id = "/base_link";
+
+    goal.target_pose.pose.position.x =  0.0;
+    goal.target_pose.pose.position.y =  0.0;
+    goal.target_pose.pose.position.z =  0.0;
+    goal.target_pose.pose.orientation = tf::createQuaternionMsgFromYaw(0.0);
+    if (go_to_position(goal)) {
+        ROS_INFO("Succesfully rotated to %f  degrees", degree);
+    } else {
+        ROS_INFO("Unsuccessfully rotated to %f degrees", degree);
+    };
 }
 
 // Continues to the given unvisited waypoint

@@ -13,6 +13,9 @@ typedef actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> Client;
 // Returns true if object is seen, else returns false
 bool search_point();
 
+// Rotates the robot to the given direction
+void rotate(float degree);
+
 // Goes to the given waypoint
 // Returns true if reaches point, else returns false
 bool go_to_next(Point next_location);

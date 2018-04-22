@@ -42,9 +42,9 @@ std::vector<Point> make_order(Point start_pos)
         return best_perm;
 }
 
-#include <iostream>
-int main()
-{
-        for (auto &&i : make_order(camera_position.front()))
-                std::cout << i.x << ", " << i.y << " " << i.description << std::endl;
-}
+// #include <iostream>
+// int main()
+// {
+//         for (auto &&i : make_order(camera_position.front()))
+//                 std::cout << i.x << ", " << i.y << " " << i.description << std::endl;
+// }

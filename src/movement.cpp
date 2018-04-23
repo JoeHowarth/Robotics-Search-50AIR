@@ -25,7 +25,7 @@ void rotate(float degree) {
 
     goal.target_pose.pose.orientation = tf::createQuaternionMsgFromYaw(PI*degree/180.0);
     if (go_to_position(goal)) {
-        ROS_INFO("Succesfully rotated to %f  degrees", degree);
+        ROS_INFO("Succesfully rotated to %f degrees", degree);
     } else {
         ROS_INFO("Unsuccessfully rotated to %f degrees", degree);
     };
@@ -69,8 +69,6 @@ bool go_to_position(move_base_msgs::MoveBaseGoal goal) {
             return true;
     }
 }
-
-#include <stack>
 
 bool investigate_further(double angle, double prob)
 {        

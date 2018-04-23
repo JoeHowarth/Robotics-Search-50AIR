@@ -1,5 +1,6 @@
 #include "ros/ros.h"
 #include "movement.h"
+#include <cassert>
 
 // Searches in all 4 directions at current (x,y) position
 // Returns true if object is seen, else returns false
@@ -21,6 +22,7 @@ void rotate(float degree) {
     goal.target_pose.pose.position.x =  0.0;
     goal.target_pose.pose.position.y =  0.0;
     goal.target_pose.pose.position.z =  0.0;
+
     goal.target_pose.pose.orientation = tf::createQuaternionMsgFromYaw(PI*degree/180.0);
     if (go_to_position(goal)) {
         ROS_INFO("Succesfully rotated to %f  degrees", degree);
@@ -66,4 +68,49 @@ bool go_to_position(move_base_msgs::MoveBaseGoal goal) {
         if (nav_client.getState() == actionlib::SimpleClientGoalState::SUCCEEDED)
             return true;
     }
+}
+
+#include <stack>
+
+bool investigate_further(double angle, double prob)
+{        
+        static std::stack<double> angle_stack;
+        angle_stack.push_back(angle);
+
+        //found
+        if (prob > MIN_FOUND_PROBABILITY) return true;
+        
+        //not found
+        if (prob < MIN_SEARCH_PROBABILITY) {
+                back_track(angle_stack);
+                return false;
+        }
+
+        //maybe
+        if (go_to_position(move_forward_goal())) {
+                ROS_INFO("Succesfully searched further");
+                return search_point();
+        } else {
+                ROS_INFO("Unsuccessfully searched further, QUITTING");
+                exit(1);
+        }
+}
+
+void back_track(std::stack<double> angles)
+{
+        
+        rotate(360-angles);
+        
+}
+
+move_base_msgs::MoveBaseGoal move_forward_goal()
+{
+        move_base_msgs::MoveBaseGoal goal;
+        goal.target_pose.header.frame_id = "/base_link";
+        
+        goal.target_pose.pose.position.x =  1.0;
+        goal.target_pose.pose.position.y =  0.0;
+        goal.target_pose.pose.position.z =  0.0;
+        goal.target_pose.pose.orientation = tf::createQuaternionMsgFromYaw(0);
+        return goal;
 }

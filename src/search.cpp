@@ -1,17 +1,24 @@
 #include "ros/ros.h"
 #include <geometry_msgs/PoseWithCovarianceStamped.h>
+#include <tf/transform_datatypes.h>
 
 #include "coordinates.h"
 #include "preprocess.h"
 #include "movement.h"
 
 
-Point curr_position = {0, 0, "Current Position"};
+Point curr_position = {0, 0, 0, 0, 0, "Current Position"};
 
 void positionCallback(const geometry_msgs::PoseWithCovarianceStamped::ConstPtr& msg)
 {
     curr_position.x = msg -> pose.pose.position.x;
     curr_position.y = msg -> pose.pose.position.y;
+    tf::Quaternion q(msg -> pose.pose.orientation.x,
+                     msg -> pose.pose.orientation.y,
+                     msg -> pose.pose.orientation.z,
+                     msg -> pose.pose.orientation.w);
+    tf::Matrix3x3 m(q);
+    m.getRPY(curr_position.roll, curr_position.pitch, curr_position.yaw);
     curr_position.description = "Current Position";
 }
 
@@ -40,6 +47,9 @@ int main(int argc, char *argv[])
             ROS_INFO("Unable to reach point, skipping to next point\n");
         }
         isFound = search_point();
+        if (isFound == true) {
+            ROS_INFO("Oobject has been Found!\n");
+        }
         if (current_search_index + 1 < ordered.size()) {
             current_search_index ++;
         } else {

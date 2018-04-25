@@ -1,20 +1,42 @@
 #include "ros/ros.h"
 #include "movement.h"
-#include <cassert>
 
-// Searches in all 4 directions at current (x,y) position
+
+#include <stdlib.h>
+#include <time.h>
+bool image_search() {
+    srand(time(NULL));
+    if (rand() % 2)
+        return true;
+    return false;
+}
+
+// Searches in all directions at current (x,y) position
 // Returns true if object is seen, else returns false
 bool search_point() {
-    for (int i = 0; i < 4; i++) {
-        rotate(90.0);
+    if (search360() == true) {
+        return investigate_further();
     }
-    // needs to publish when need to camera and processing to occur
-    // must listen for when camera module responds
+    return false;
+}
+
+
+// Searches all directions at current (x,y) poisition
+// Stops at angle if object is seen and returns true
+// Else, returns false
+bool search360() {
+    float degree = 0.0;
+    while (degree <= 360) {
+        rotate(2.0);
+        degree += 2.0;
+        if (image_search()) {
+            return true;
+        }
+    }
     return false;
 }
 
 void rotate(float degree) {
-    // TODO: have to send twist message?
     ROS_INFO("Attempting to rotate %f  degrees", degree);
     move_base_msgs::MoveBaseGoal goal;
     goal.target_pose.header.frame_id = "/base_link";
@@ -41,7 +63,7 @@ bool go_to_next(Point next_location) {
     goal.target_pose.pose.position.x =  next_location.x;
     goal.target_pose.pose.position.y =  next_location.y;
     goal.target_pose.pose.position.z =  0.0;
-    goal.target_pose.pose.orientation = tf::createQuaternionMsgFromYaw(0.0);
+    goal.target_pose.pose.orientation = tf::createQuaternionMsgFromYaw(next_location.yaw);
 
     ROS_INFO("Navigating to %s", next_location.description.c_str());
     bool success = go_to_position(goal);
@@ -70,35 +92,32 @@ bool go_to_position(move_base_msgs::MoveBaseGoal goal) {
     }
 }
 
-bool investigate_further(double angle, double prob)
-{        
-        static std::stack<double> angle_stack;
-        angle_stack.push_back(angle);
-
-        //found
-        if (prob > MIN_FOUND_PROBABILITY) return true;
-        
-        //not found
-        if (prob < MIN_SEARCH_PROBABILITY) {
-                back_track(angle_stack);
-                return false;
-        }
-
-        //maybe
-        if (go_to_position(move_forward_goal())) {
-                ROS_INFO("Succesfully searched further");
-                return search_point();
+// Robot has seen something of interest in the current direction and will
+// investgate more
+// Returns true if object is seen, returns false otherwise
+bool investigate_further() {
+    std::stack<Point> searchedPoints;
+    if (image_search()) {
+        searchedPoints.push(curr_position);
+        go_to_position(move_forward_goal());
+    }
+    while (!searchedPoints.empty()) {
+        if (image_search()) {
+            searchedPoints.push(curr_position);
+            go_to_position(move_forward_goal());
         } else {
-                ROS_INFO("Unsuccessfully searched further, QUITTING");
-                exit(1);
-        }
-}
+            if (search360()) {
+                searchedPoints.push(curr_position);
+                go_to_position(move_forward_goal());
+            } else {
+                Point return_point = searchedPoints.top();
+                go_to_next(return_point);
+                searchedPoints.pop();
+            }
 
-void back_track(std::stack<double> angles)
-{
-        
-        rotate(360-angles);
-        
+        }
+    }
+    return false;
 }
 
 move_base_msgs::MoveBaseGoal move_forward_goal()
@@ -106,7 +125,7 @@ move_base_msgs::MoveBaseGoal move_forward_goal()
         move_base_msgs::MoveBaseGoal goal;
         goal.target_pose.header.frame_id = "/base_link";
         
-        goal.target_pose.pose.position.x =  1.0;
+        goal.target_pose.pose.position.x =  0.5;
         goal.target_pose.pose.position.y =  0.0;
         goal.target_pose.pose.position.z =  0.0;
         goal.target_pose.pose.orientation = tf::createQuaternionMsgFromYaw(0);

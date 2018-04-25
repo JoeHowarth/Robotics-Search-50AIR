@@ -2,10 +2,12 @@
 #define MOVEMENT_H_
 
 #include "coordinates.h"
+
 #include <move_base_msgs/MoveBaseAction.h>
 #include <actionlib/client/simple_action_client.h>
 #include <tf/tf.h>
 #include <math.h>
+#include <stack>
 
 typedef actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> Client;
 

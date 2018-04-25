@@ -9,7 +9,7 @@ struct Point {
         std::string description;
 };
 
-const double PI  =3.141592653589793238463;
+const double PI = 3.141592653589793238463;
 
 // Predefined waypoints for camera to search at
 const std::vector<Point> camera_position = {

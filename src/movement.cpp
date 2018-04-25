@@ -4,14 +4,8 @@
 
 // Searches in all 4 directions at current (x,y) position
 // Returns true if object is seen, else returns false
-bool search_point() {
-    for (int i = 0; i < 4; i++) {
-        rotate(90.0);
-    }
-    // needs to publish when need to camera and processing to occur
-    // must listen for when camera module responds
-    return false;
-}
+
+extern Point curr_position;
 
 void rotate(float degree) {
     // TODO: have to send twist message?
@@ -23,12 +17,13 @@ void rotate(float degree) {
     goal.target_pose.pose.position.y =  0.0;
     goal.target_pose.pose.position.z =  0.0;
 
-    goal.target_pose.pose.orientation = tf::createQuaternionMsgFromYaw(PI*degree/180.0);
+    goal.target_pose.pose.orientation =
+            tf::createQuaternionMsgFromYaw(PI*degree/180.0);
     if (go_to_position(goal)) {
         ROS_INFO("Succesfully rotated to %f  degrees", degree);
     } else {
         ROS_INFO("Unsuccessfully rotated to %f degrees", degree);
-    };
+    }
 }
 
 // Continues to the given unvisited waypoint
@@ -70,40 +65,7 @@ bool go_to_position(move_base_msgs::MoveBaseGoal goal) {
     }
 }
 
-#include <stack>
-
-bool investigate_further(double angle, double prob)
-{        
-        static std::stack<double> angle_stack;
-        angle_stack.push_back(angle);
-
-        //found
-        if (prob > MIN_FOUND_PROBABILITY) return true;
-        
-        //not found
-        if (prob < MIN_SEARCH_PROBABILITY) {
-                back_track(angle_stack);
-                return false;
-        }
-
-        //maybe
-        if (go_to_position(move_forward_goal())) {
-                ROS_INFO("Succesfully searched further");
-                return search_point();
-        } else {
-                ROS_INFO("Unsuccessfully searched further, QUITTING");
-                exit(1);
-        }
-}
-
-void back_track(std::stack<double> angles)
-{
-        
-        rotate(360-angles);
-        
-}
-
-move_base_msgs::MoveBaseGoal move_forward_goal()
+static move_base_msgs::MoveBaseGoal move_forward_goal()
 {
         move_base_msgs::MoveBaseGoal goal;
         goal.target_pose.header.frame_id = "/base_link";
@@ -113,4 +75,22 @@ move_base_msgs::MoveBaseGoal move_forward_goal()
         goal.target_pose.pose.position.z =  0.0;
         goal.target_pose.pose.orientation = tf::createQuaternionMsgFromYaw(0);
         return goal;
+}
+
+bool search_point(Point curr)
+{
+        for (int i = 0; i < 4; ++i) {
+                rotate(90);
+
+                float prob = rand() % 100 /100.0; //INSERT EVALUATE FUNCTION
+
+                if (prob > MIN_FOUND_PROBABILITY)
+                        return true;
+                else if (prob > MIN_SEARCH_PROBABILITY) {
+                        go_to_position(move_forward_goal());
+                        search_point(curr_position);
+                        go_to_next(curr);
+                }
+        }
+        return false;
 }

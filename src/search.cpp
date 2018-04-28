@@ -1,7 +1,7 @@
 #include "ros/ros.h"
 #include <geometry_msgs/PoseWithCovarianceStamped.h>
 #include <tf/transform_datatypes.h>
-#include <std_msgs> // add more specific
+// #include <std_msgs> // add more specific
 
 #include "coordinates.h"
 #include "preprocess.h"
@@ -24,10 +24,10 @@ void positionCallback(const geometry_msgs::PoseWithCovarianceStamped::ConstPtr& 
     curr_position.description = "Current Position";
 }
 
-void cameraCallback(const std_msgs::int8& msg) { // todo: check?
+// void cameraCallback(const std_msgs::int8& msg) { // todo: check?
     // 1 is not seen
     // not 1 is seen
-}
+// }
 
 int main(int argc, char *argv[])
 {

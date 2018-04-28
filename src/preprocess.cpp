@@ -6,8 +6,8 @@ double distance(Point p1, Point p2)
 {
         double dx = std::abs(p1.x - p2.x);
         double dy = std::abs(p1.y - p2.y);
-        return std::sqrt(dx*dx + dy*dy);
-        //return dx + dy;
+        return std::sqrt(dx*dx + dy*dy); //Eucledian
+        //return dx + dy; //Manhattan
 }
 
 double perm_distance(std::vector<Point> &perm)
@@ -17,6 +17,8 @@ double perm_distance(std::vector<Point> &perm)
                 dist += distance(perm[i], perm[i+1]);
         return dist;
 }
+
+#include <string> //for implicit casting
 
 //camera_position
 std::vector<Point> make_order(Point start_pos)
@@ -39,6 +41,13 @@ std::vector<Point> make_order(Point start_pos)
                         best_perm = perm;
                 }
         }
+
+        auto append = [](std::string s, Point p) { return s + p.description + " "; }
+        
+        ROS_INFO("%s\n", 
+                 std::accumulate(best_perm.begin(), best_perm.end(),
+                                 "Path Selected:\n", append));
+        
         return best_perm;
 }
 

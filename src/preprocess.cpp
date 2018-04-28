@@ -41,12 +41,16 @@ std::vector<Point> make_order(Point start_pos)
                         best_perm = perm;
                 }
         }
+        std::string s;
+        for (auto &&it : best_perm) s += it.description + std::string(" ");
+        ROS_INFO("Path Selected:\n%s", s);
 
-        auto append = [](std::string s, Point p) { return s + p.description + " "; }
         
-        ROS_INFO("%s\n", 
-                 std::accumulate(best_perm.begin(), best_perm.end(),
-                                 "Path Selected:\n", append));
+//        auto append = [](std::string s, Point p) { return s + p.description + " "; }
+        
+//        ROS_INFO("%s\n", 
+//                 std::accumulate(best_perm.begin(), best_perm.end(),
+//                                 "Path Selected:\n", append));
         
         return best_perm;
 }

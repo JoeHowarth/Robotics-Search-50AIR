@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <string>
+#include <ros/ros.h>
 
 struct Point {
         double x, y;

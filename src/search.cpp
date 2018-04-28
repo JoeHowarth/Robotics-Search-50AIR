@@ -9,7 +9,7 @@
 
 
 Point curr_position = {0, 0, 0, 0, 0, "Current Position"};
-int8 camera_value = 1;
+//int8 camera_value = 1;
 
 void positionCallback(const geometry_msgs::PoseWithCovarianceStamped::ConstPtr& msg)
 {

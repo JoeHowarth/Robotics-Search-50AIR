@@ -43,7 +43,7 @@ std::vector<Point> make_order(Point start_pos)
         }
         std::string s;
         for (auto &&it : best_perm) s += it.description + std::string(" ");
-        ROS_INFO("Path Selected:\n%s", s);
+        ROS_INFO("Path Selected:\n%s", s.c_str());
 
         
 //        auto append = [](std::string s, Point p) { return s + p.description + " "; }

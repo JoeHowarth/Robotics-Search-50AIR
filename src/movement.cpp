@@ -5,9 +5,9 @@
 #include <stdlib.h>
 #include <time.h>
 bool image_search() {
-    srand(time(NULL));
-    if (rand() % 2)
-        return true;
+    // srand(time(NULL));
+    // if (rand() % 2)
+    //     return true;
     return false;
 }
 
@@ -26,9 +26,9 @@ bool search_point() {
 // Else, returns false
 bool search360() {
     float degree = 0.0;
-    while (degree <= 360) {
-        rotate(2.0);
-        degree += 2.0;
+    while (degree <= 420) {
+        rotate(45.0);
+        degree += 45.0;
         if (image_search()) {
             return true;
         }

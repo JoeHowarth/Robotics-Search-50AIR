@@ -1,6 +1,7 @@
 #include "ros/ros.h"
 #include <geometry_msgs/PoseWithCovarianceStamped.h>
 #include <tf/transform_datatypes.h>
+#include <std_msgs> // add more specific
 
 #include "coordinates.h"
 #include "preprocess.h"
@@ -8,6 +9,7 @@
 
 
 Point curr_position = {0, 0, 0, 0, 0, "Current Position"};
+int8 camera_value = 1;
 
 void positionCallback(const geometry_msgs::PoseWithCovarianceStamped::ConstPtr& msg)
 {
@@ -22,6 +24,10 @@ void positionCallback(const geometry_msgs::PoseWithCovarianceStamped::ConstPtr& 
     curr_position.description = "Current Position";
 }
 
+void cameraCallback(const std_msgs::int8& msg) { // todo: check?
+    // 1 is not seen
+    // not 1 is seen
+}
 
 int main(int argc, char *argv[])
 {
@@ -31,6 +37,7 @@ int main(int argc, char *argv[])
 
     // Getting Current Position
     n.subscribe<geometry_msgs::PoseWithCovarianceStamped>("amcl_pose", 100, positionCallback);
+    // n.subscribe<std_msgs::int8>("visp_auto_tracker_status", 100, cameraCallback);
     ros::Rate loop_rate(10);
     ros::spinOnce();
     

@@ -8,8 +8,7 @@
 // Returns true if object is seen, else returns false
 bool search_point() {
     if (search360() == true) {
-	return true;        
-	//return investigate_further();
+        return investigate_further();
     }
     return false;
 }

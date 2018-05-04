@@ -61,6 +61,7 @@ int main(int argc, char *argv[])
         }
 	    isFound_routine = search_point();
         if (isFound_routine == true) {
+            ROS_INFO("Object has been Found!\n");
 	        break;
         }
         if (current_search_index + 1 < ordered.size()) {
@@ -70,6 +71,6 @@ int main(int argc, char *argv[])
             break;
         }
     }
-    ROS_INFO("Object has been Found!\n");
+
     return 0;
 }

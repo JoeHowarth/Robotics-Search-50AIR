@@ -1,5 +1,5 @@
 #include "preprocess.h"
-
+#include <ros/ros.h>
 #include <algorithm>
 #include <cmath>
 double distance(Point p1, Point p2)

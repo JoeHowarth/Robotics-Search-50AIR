@@ -75,8 +75,8 @@ bool go_to_position(move_base_msgs::MoveBaseGoal goal) {
     nav_client.sendGoal(goal);
 
     while (ros::ok()) {
-        // Goal cancels if not reached with 30 seconds
-        if (ros::Time::now().sec - begin.sec > 30) {
+        // Goal cancels if not reached with 100 seconds
+        if (ros::Time::now().sec - begin.sec > 100) {
             nav_client.cancelGoal();
             return false;
         }

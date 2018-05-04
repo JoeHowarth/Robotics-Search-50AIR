@@ -24,8 +24,8 @@ void positionCallback(const geometry_msgs::PoseWithCovarianceStamped::ConstPtr& 
     curr_position.description = "Current Position";
 }
 
- void cameraCallback(const std_msgs::Int8::ConstPtr& msg) {
-    if (msg->data < 2) { 
+ void cameraCallback(const std_msgs::Int8::ConstPtr& msg) {    
+	if (msg->data < 2) { 
 	    ROS_INFO("not seen %d", msg->data);
 	    return;
     }
@@ -42,8 +42,8 @@ int main(int argc, char *argv[])
     ros::NodeHandle n;
 
     // Getting Current Position
-    ros::Subscriber sub  = n.subscribe<geometry_msgs::PoseWithCovarianceStamped>("amcl_pose", 100, positionCallback);
-    ros::Subscriber sub1 = n.subscribe<std_msgs::Int8>("/visp_auto_tracker/status", 100, cameraCallback);
+    // ros::Subscriber sub  = n.subscribe<geometry_msgs::PoseWithCovarianceStamped>("amcl_pose", 100, positionCallback);
+    ros::Subscriber sub1 = n.subscribe<std_msgs::Int8>("/visp_auto_tracker/status", 500, cameraCallback);
     ros::Rate loop_rate(10);
     ros::spinOnce();    
 

@@ -26,7 +26,6 @@ void positionCallback(const geometry_msgs::PoseWithCovarianceStamped::ConstPtr& 
 
  void cameraCallback(const std_msgs::Int8::ConstPtr& msg) {
     if (msg->data < 2) { 
-	    isFound = false;
 	    ROS_INFO("not seen %d", msg->data);
 	    return;
     }
@@ -60,7 +59,7 @@ int main(int argc, char *argv[])
             ROS_INFO("Unable to reach point, skipping to next point\n");
         }
 	    isFound_routine = search_point();
-        if (isFound_routine == true) {
+        if (isFound_routine || isFound) {
 	        break;
         }
         if (current_search_index + 1 < ordered.size()) {

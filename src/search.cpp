@@ -6,6 +6,9 @@
 #include "preprocess.h"
 #include "movement.h"
 #include <thread>
+#include <std_msgs/Float64.h>
+
+float confidence = 0.0;
 
 void custom_spin()
 {
@@ -30,6 +33,11 @@ void positionCallback(const geometry_msgs::PoseWithCovarianceStamped::ConstPtr& 
     //	     curr_position.y);
 }
 
+void confidenceCallback(const std_msgs::Float64::ConstPtr& msg)
+{
+  confidence = msg -> data;
+}
+
 int main(int argc, char *argv[])
 {
     // ROS Setup
@@ -38,6 +46,7 @@ int main(int argc, char *argv[])
 
     // Getting Current Position
     ros::Subscriber sub = n.subscribe<geometry_msgs::PoseWithCovarianceStamped>("amcl_pose", 100, positionCallback);
+    ros::Subscriber sub2 = n.subscribe<std_msgs::Float64>("talker", 100, confidenceCallback);
 
     ros::Rate loop_rate(10);
   

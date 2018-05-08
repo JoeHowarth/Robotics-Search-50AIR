@@ -11,6 +11,9 @@
 
 typedef actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> Client;
 extern Point curr_position;
+extern float confidence;
+
+float check_image();
 
 // Searches in all 4 directions at current (x,y) position
 // Returns true if object is seen, else returns false

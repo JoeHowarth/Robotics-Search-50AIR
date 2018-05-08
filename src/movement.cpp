@@ -1,20 +1,22 @@
 #include "ros/ros.h"
 #include "movement.h"
-
+#include <curl/curl.h>
 #include <stdlib.h>
 #include <time.h>
+#include <string>
 
 // Searches in all directions at current (x,y) position
 // Returns if object is seen
 
-const int MIN_PROB = 9999;
-const int MAX_PROB = 9999;
+const float MIN_PROB = 0.4;
+const float MAX_PROB = 0.8;
 
-int check_image() { return 0; }
+float check_image() {
+  return confidence;
+}
 
 bool search() {
-
-	for (double degree = 0; degree < 420; degree += 45) {
+	for (double degree = 0; degree < 421; degree += 45) {
                 rotate(45.0);
                 float probability_found = check_image();
                 if (probability_found < MIN_PROB) continue;
@@ -45,6 +47,7 @@ void rotate(float degree) {
     } else {
         ROS_INFO("Unsuccessfully rotated to %f degrees", degree);
     };
+    //    ros::Duration(0.5).sleep();
 }
 
 bool go_to_point(Point next_location) {

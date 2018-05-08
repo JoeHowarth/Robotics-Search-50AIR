@@ -11,26 +11,21 @@
 
 typedef actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> Client;
 extern Point curr_position;
-extern bool isFound;
 
 // Searches in all 4 directions at current (x,y) position
 // Returns true if object is seen, else returns false
-bool search_point();
+bool search();
 
 // Rotates the robot to the given direction
 void rotate(float degree);
 
-// Goes to the given waypoint
-// Returns true if reaches point, else returns false
-bool go_to_next(Point next_location);
+// Attempt to go to given point; return if achived
+bool go_to_point(Point next_location);
 
-// Robot moves to a given position
-// Returns true if position is reached, else returns false
-bool go_to_position(move_base_msgs::MoveBaseGoal goal);
+// Attempt to do a move goal; return if achived
+bool go_to_goal(move_base_msgs::MoveBaseGoal goal);
 
-
-bool search360();
-bool investigate_further();
+// Dummy goal to allow object following
 move_base_msgs::MoveBaseGoal move_forward_goal();
 
 

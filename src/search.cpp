@@ -1,7 +1,6 @@
 #include "ros/ros.h"
 #include <geometry_msgs/PoseWithCovarianceStamped.h>
 #include <tf/transform_datatypes.h>
-#include <std_msgs/Int8.h>
 
 #include "coordinates.h"
 #include "preprocess.h"
@@ -9,7 +8,6 @@
 
 
 Point curr_position = {0, 0, 0, 0, 0, "Current Position"};
-bool isFound = false;
 
 void positionCallback(const geometry_msgs::PoseWithCovarianceStamped::ConstPtr& msg)
 {
@@ -24,18 +22,6 @@ void positionCallback(const geometry_msgs::PoseWithCovarianceStamped::ConstPtr& 
     curr_position.description = "Current Position";
 }
 
- void cameraCallback(const std_msgs::Int8::ConstPtr& msg) {
-    if (msg->data < 2) { 
-	    isFound = false;
-	    ROS_INFO("not seen %d", msg->data);
-	    return;
-    }
-    isFound = true; 
-    ROS_INFO("seen %d\n", msg->data);
-    // 1 is not seen
-    // not 1 is seen
-}
-
 int main(int argc, char *argv[])
 {
     // ROS Setup
@@ -43,33 +29,21 @@ int main(int argc, char *argv[])
     ros::NodeHandle n;
 
     // Getting Current Position
-    ros::Subscriber sub  = n.subscribe<geometry_msgs::PoseWithCovarianceStamped>("amcl_pose", 100, positionCallback);
-    ros::Subscriber sub1 = n.subscribe<std_msgs::Int8>("/visp_auto_tracker/status", 100, cameraCallback);
+    n.subscribe<geometry_msgs::PoseWithCovarianceStamped>("amcl_pose", 100, positionCallback);
     ros::Rate loop_rate(10);
-    ros::spinOnce();    
-
+    ros::spinOnce();
+    
     // Process Optimal Route with Full Coverage
     std::vector<Point> ordered = make_order(curr_position);
 
-    // Movement
-    int current_search_index = 1; // index of point to search next; skipping starting location
-    bool isFound_routine = search_point();
-    while (isFound_routine == false) {
-	//ros::spinOnce();        
-	if (go_to_next(ordered[current_search_index]) == false) { // false if unable to reach point
-            ROS_INFO("Unable to reach point, skipping to next point\n");
-        }
-	    isFound_routine = search_point();
-        if (isFound_routine == true) {
-	        break;
-        }
-        if (current_search_index + 1 < ordered.size()) {
-            current_search_index ++;
-        } else {
-            ROS_INFO("Finished Searching - Unable to Find Object :(\n");
-            break;
-        }
+    if (search()) ROS_INFO("THAT WAS EASY\n");
+
+    for (auto it = ordered.begin()+1; it != ordered.end(); ++it) {
+            go_to_point(p);
+            if (search()) ROS_INFO("OBJECT FOUND!!!!\n");
     }
-    ROS_INFO("Object has been Found!\n");
+
+    ROS_INFO("UNABLE TO FIND OBJECT AFTER LOOKING ALL POINTS\n");
+           
     return 0;
 }

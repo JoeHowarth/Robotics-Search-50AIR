@@ -5,32 +5,27 @@
 #include <time.h>
 
 // Searches in all directions at current (x,y) position
-// Returns true if object is seen, else returns false
-bool search_point() {
-    if (search360() == true) {
-	return true;        
-	//return investigate_further();
-    }
-    return false;
-}
+// Returns if object is seen
+bool search() {
 
+        float degree = 0.0;
+        while (degree <= 420) {
+                rotate(45.0);
+                float probability_found = check_image();
+                if (probability_found < MIN_PROB) continue;
+                if (probability_found > MAX_PROB) return true;
 
-// Searches all directions at current (x,y) poisition
-// Stops at angle if object is seen and returns true
-// Else, returns false
-bool search360() {
-    float degree = 0.0;
-    while (degree <= 420) {
-        rotate(45.0);
-        degree += 45.0;
-        if (isFound) {
-            return true;
+                Point curr = curr_position;                
+                go_to_goal(move_forward_goal());
+                
+                if (search_point()) return true; // recurse
+
+                go_to_point(curr);                
         }
-    }
-    return false;
+        return false;
 }
 
-void rotate(float degree) {
+void rotate(float degree) { 
     ROS_INFO("Attempting to rotate %f  degrees", degree);
     move_base_msgs::MoveBaseGoal goal;
     goal.target_pose.header.frame_id = "/base_link";
@@ -47,9 +42,7 @@ void rotate(float degree) {
     };
 }
 
-// Continues to the given unvisited waypoint
-// Returns true while unvisited points exist, else returns false
-bool go_to_next(Point next_location) {
+bool go_to_point(Point next_location) {
     // Making goal
     move_base_msgs::MoveBaseGoal goal;
     goal.target_pose.header.frame_id = "/map";
@@ -64,9 +57,8 @@ bool go_to_next(Point next_location) {
     return success;
 }
 
-// Robot moves to a given position
-// Returns true if position is reached, else returns false
-bool go_to_position(move_base_msgs::MoveBaseGoal goal) {
+// Robot attempts a goal and return if reached
+bool go_to_goal(move_base_msgs::MoveBaseGoal goal) {
     ros::Rate r(10);
     Client nav_client("move_base", true);
     nav_client.waitForServer();
@@ -86,34 +78,7 @@ bool go_to_position(move_base_msgs::MoveBaseGoal goal) {
     }
 }
 
-// Robot has seen something of interest in the current direction and will
-// investgate more
-// Returns true if object is seen, returns false otherwise
-bool investigate_further() {
-    std::stack<Point> searchedPoints;
-    if (isFound) {
-        searchedPoints.push(curr_position);
-        go_to_position(move_forward_goal());
-    }
-    while (!searchedPoints.empty()) {
-        if (isFound) {
-            searchedPoints.push(curr_position);
-            go_to_position(move_forward_goal());
-        } else {
-            if (search360()) {
-                searchedPoints.push(curr_position);
-                go_to_position(move_forward_goal());
-            } else {
-                Point return_point = searchedPoints.top();
-                go_to_next(return_point);
-                searchedPoints.pop();
-            }
-
-        }
-    }
-    return false;
-}
-
+// simple goal for following
 move_base_msgs::MoveBaseGoal move_forward_goal()
 {
         move_base_msgs::MoveBaseGoal goal;

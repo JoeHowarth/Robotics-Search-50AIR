@@ -4,10 +4,10 @@
 #include <cmath>
 double distance(Point p1, Point p2)
 {
-        double dx = std::abs(p1.x - p2.x);
-        double dy = std::abs(p1.y - p2.y);
+        double dx = p1.x - p2.x;
+        double dy = p1.y - p2.y;
         return std::sqrt(dx*dx + dy*dy); //Eucledian
-        //return dx + dy; //Manhattan
+        //return std::abs(dx) + std::abs(dy); //Manhattan
 }
 
 double perm_distance(std::vector<Point> &perm)
@@ -23,6 +23,8 @@ double perm_distance(std::vector<Point> &perm)
 //camera_position
 std::vector<Point> make_order(Point start_pos)
 {
+  ROS_INFO("STARTING POINT COORDINATES : %lf %lf",
+	   start_pos.x, start_pos.y);
         start_pos.description = "start";
         std::vector<Point> perm = camera_position;
         perm.insert(perm.begin(), start_pos);
@@ -36,6 +38,7 @@ std::vector<Point> make_order(Point start_pos)
         };
         while (std::next_permutation(perm.begin()+1, perm.end(), comp)) {
                 double dist = perm_distance(perm);
+
                 if (dist < best_dist) {
                         best_dist = dist;
                         best_perm = perm;

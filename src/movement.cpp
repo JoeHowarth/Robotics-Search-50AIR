@@ -6,10 +6,15 @@
 
 // Searches in all directions at current (x,y) position
 // Returns if object is seen
+
+const int MIN_PROB = 9999;
+const int MAX_PROB = 9999;
+
+int check_image() { return 0; }
+
 bool search() {
 
-        float degree = 0.0;
-        while (degree <= 420) {
+	for (double degree = 0; degree < 420; degree += 45) {
                 rotate(45.0);
                 float probability_found = check_image();
                 if (probability_found < MIN_PROB) continue;
@@ -18,7 +23,7 @@ bool search() {
                 Point curr = curr_position;                
                 go_to_goal(move_forward_goal());
                 
-                if (search_point()) return true; // recurse
+                if (search()) return true; // recurse
 
                 go_to_point(curr);                
         }
@@ -35,7 +40,7 @@ void rotate(float degree) {
     goal.target_pose.pose.position.z =  0.0;
 
     goal.target_pose.pose.orientation = tf::createQuaternionMsgFromYaw(PI*degree/180.0);
-    if (go_to_position(goal)) {
+    if (go_to_goal(goal)) {
         ROS_INFO("Succesfully rotated to %f degrees", degree);
     } else {
         ROS_INFO("Unsuccessfully rotated to %f degrees", degree);
@@ -53,7 +58,7 @@ bool go_to_point(Point next_location) {
     goal.target_pose.pose.orientation = tf::createQuaternionMsgFromYaw(next_location.yaw);
 
     ROS_INFO("Navigating to %s", next_location.description.c_str());
-    bool success = go_to_position(goal);
+    bool success = go_to_goal(goal);
     return success;
 }
 

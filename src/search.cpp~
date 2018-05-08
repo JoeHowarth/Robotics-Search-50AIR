@@ -24,10 +24,9 @@ void positionCallback(const geometry_msgs::PoseWithCovarianceStamped::ConstPtr& 
     curr_position.description = "Current Position";
 }
 
- void cameraCallback(const std_msgs::Int8::ConstPtr& msg) {
-    if (msg->data < 2) { 
-	    isFound = false;
-	    ROS_INFO("not seen %d", msg->data);
+ void cameraCallback(const std_msgs::Int8::ConstPtr& msg) {    
+	if (msg->data < 2) { 
+	    //ROS_INFO("not seen %d", msg->data);
 	    return;
     }
     isFound = true; 
@@ -43,8 +42,8 @@ int main(int argc, char *argv[])
     ros::NodeHandle n;
 
     // Getting Current Position
-    ros::Subscriber sub  = n.subscribe<geometry_msgs::PoseWithCovarianceStamped>("amcl_pose", 100, positionCallback);
-    ros::Subscriber sub1 = n.subscribe<std_msgs::Int8>("/visp_auto_tracker/status", 100, cameraCallback);
+    // ros::Subscriber sub  = n.subscribe<geometry_msgs::PoseWithCovarianceStamped>("amcl_pose", 100, positionCallback);
+    ros::Subscriber sub1 = n.subscribe<std_msgs::Int8>("/visp_auto_tracker/status", 500, cameraCallback);
     ros::Rate loop_rate(10);
     ros::spinOnce();    
 
@@ -60,8 +59,7 @@ int main(int argc, char *argv[])
             ROS_INFO("Unable to reach point, skipping to next point\n");
         }
 	    isFound_routine = search_point();
-        if (isFound_routine == true) {
-            ROS_INFO("Object has been Found!\n");
+        if (isFound_routine || isFound) {
 	        break;
         }
         if (current_search_index + 1 < ordered.size()) {
@@ -71,6 +69,6 @@ int main(int argc, char *argv[])
             break;
         }
     }
-
+    ROS_INFO("Object has been Found!\n");
     return 0;
 }

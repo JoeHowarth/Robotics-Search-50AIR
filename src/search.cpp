@@ -26,11 +26,12 @@ void positionCallback(const geometry_msgs::PoseWithCovarianceStamped::ConstPtr& 
 
  void cameraCallback(const std_msgs::Int8::ConstPtr& msg) {    
 	if (msg->data < 2) { 
-	    ROS_INFO("not seen %d", msg->data);
+	    //ROS_INFO("not seen %d", msg->data);
 	    return;
     }
     isFound = true; 
-    ROS_INFO("seen %d\n", msg->data);
+    ROS_INFO("Object Found! %d\n", msg->data);
+    exit(1);
     // 1 is not seen
     // not 1 is seen
 }

@@ -1,9 +1,11 @@
-COMP50 Final Project
-
-Automous Search and Identification
-
-Spring 2018
-
+# Autonomous Search and Identification
+**COMP50 (Autonomous Intelligent Robots) - Final Project**<br>
+*Matthew Lee, Joe Howarth, Kostas Tsiampouris*<br>
+*Spring 2018*
 
 
-Joe Howarth, Kostas Tsiampouris, Matthew Lee
+## Setup
+TODO
+
+## Running the Program
+TODO

@@ -5,9 +5,6 @@
 #include <time.h>
 #include <string>
 
-// Searches in all directions at current (x,y) position
-// Returns if object is seen
-
 const float MIN_PROB = 0.4;
 const float MAX_PROB = 0.8;
 

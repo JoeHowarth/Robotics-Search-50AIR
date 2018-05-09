@@ -25,7 +25,4 @@ const std::vector<Point> camera_position = {
         {5.394, 6.621, 0, 0, 0, "B. Tracey Hallway"}
 };
 
-const double MIN_SEARCH_PROBABILITY = 0.4;
-const double MIN_FOUND_PROBABILITY = 0.8;
-
 #endif // COORDINATES_H_

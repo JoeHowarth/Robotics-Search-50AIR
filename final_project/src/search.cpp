@@ -2,7 +2,7 @@
 #include <geometry_msgs/PoseWithCovarianceStamped.h>
 #include <tf/transform_datatypes.h>
 #include <unistd.h>
-#include "coordinates.h"
+#include "constants.h"
 #include "preprocess.h"
 #include "movement.h"
 #include <thread>
@@ -28,9 +28,6 @@ void positionCallback(const geometry_msgs::PoseWithCovarianceStamped::ConstPtr& 
     tf::Matrix3x3 m(q);
     m.getRPY(curr_position.roll, curr_position.pitch, curr_position.yaw);
     curr_position.description = "Current Position";
-
-    //ROS_INFO("Callback output: %lf %lf", curr_position.x,
-    //	     curr_position.y);
 }
 
 void confidenceCallback(const std_msgs::Float64::ConstPtr& msg)

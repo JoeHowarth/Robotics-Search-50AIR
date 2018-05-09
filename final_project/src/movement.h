@@ -1,7 +1,7 @@
 #ifndef MOVEMENT_H_
 #define MOVEMENT_H_
 
-#include "coordinates.h"
+#include "constants.h"
 
 #include <move_base_msgs/MoveBaseAction.h>
 #include <actionlib/client/simple_action_client.h>

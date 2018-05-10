@@ -8,6 +8,9 @@
 The final project folder along with the python file should be placed within the catkin_ws and compiled.
 
 To setup the server running Tensorflow, the following must be done...
+<https://github.com/JoeHowarth/Object-Detection-Server>
+
+
 
 ## Running the Program
 To run the program, the following commands must be run:
@@ -23,4 +26,5 @@ The intial AMCL pose must then be set. The final command can then be run which r
 ```
 $ rosrun final_project final_project_run
 ```
+
 
